@@ -8,7 +8,7 @@
 #include "mutex.h"
 #include "refcount.h"
 
-#define JANUS_RECORDEXHANDER_API_VERSION	15
+#define JANUS_RECORDEXHANDER_API_VERSION	1
 
 #define JANUS_RECORDEX_HANDER_INIT(...) {		\
 		.init = NULL,							\
