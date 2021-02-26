@@ -20,11 +20,11 @@
 		.get_name = NULL,						\
 		.get_author = NULL,						\
 		.get_package = NULL,					\
-		.recordex_create = NULL, 				\
-		.recordex_delete = NULL,				\
-		.recordex_open = NULL, 					\
-		.recordex_close = NULL, 				\
-		.recordex_process = NULL, 				\
+		.create = NULL, 						\
+		.delete = NULL,							\
+		.open = NULL, 							\
+		.close = NULL, 							\
+		.process = NULL, 						\
 		## __VA_ARGS__ }
 
 typedef struct janus_recordex_hander janus_recordex_hander;
