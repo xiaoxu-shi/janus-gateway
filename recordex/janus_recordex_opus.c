@@ -7,7 +7,7 @@
 #define JANUS_RECORDEX_OPUS_AUTHOR 			"xiaoxu.shi <xaoxu_shi@yeah.net>"
 #define JANUS_RECORDEX_OPUS_PACKAGE			"janus.recordex.opus"
 
-janus_recordex_hander* create_e(void);
+janus_recordex_hander* create_r(void);
 int  janus_recordex_opus_init(const char *config_path);
 void janus_recordex_opus_destroy(void);
 int  janus_recordex_opus_get_api_compatibility(void);
@@ -42,7 +42,7 @@ janus_recordex_hander janus_recordex_opus_hander =
         .process = janus_recordex_opus_process,
     );
 
-janus_recordex_hander* create_e(void) {
+janus_recordex_hander* create_r(void) {
     JANUS_LOG(LOG_VERB, "%s created!\n", JANUS_RECORDEX_OPUS_NAME);
     return &janus_recordex_opus_hander;
 }

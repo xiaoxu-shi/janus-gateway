@@ -66,6 +66,6 @@ struct janus_recordex_recorder {
 	janus_refcount 			ref;
 };
 
-typedef janus_recordex_hander* create_e(void);
+typedef janus_recordex_hander* create_r(void);
 
 #endif
