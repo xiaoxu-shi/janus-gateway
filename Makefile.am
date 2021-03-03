@@ -28,6 +28,17 @@ eventsheader_HEADERS = events/eventhandler.h
 loggersheaderdir = $(includedir)/janus/loggers
 loggersheader_HEADERS = loggers/logger.h
 
+##
+# xiaoxu.shi recordexs add
+##
+
+recordexsheaderdir = $(includedir)/janus/recordexs
+recordexsheader_HEADERS = recordexs/recordexhander.h
+
+##
+# xiaoxu.shi recordexs end
+##
+
 confdir = $(sysconfdir)/janus
 conf_DATA = conf/janus.jcfg.sample
 
@@ -42,6 +53,17 @@ event_LTLIBRARIES = $(NULL)
 
 loggerdir = $(libdir)/janus/loggers
 logger_LTLIBRARIES = $(NULL)
+
+##
+# xiaoxu.shi recordexs add
+##
+
+recordexdir = $(libdir)/janus/recordexs
+recordex_LTLIBRARIES = $(NULL)
+
+##
+# xiaoxu.shi recordexs end
+##
 
 SUBDIRS = html
 dist_html_DATA = README.md
@@ -72,6 +94,7 @@ jsmodules_DATA = html/janus.js
 	    s|[@]transportdir[@]|$(transportdir)|;\
 	    s|[@]eventdir[@]|$(eventdir)|;\
 	    s|[@]loggerdir[@]|$(loggerdir)|;\
+		s|[@]recordexdir[@]|$(recordexdir)|;\
 	    s|[@]recordingsdir[@]|$(recordingsdir)|;\
 	    s|[@]demosdir[@]|$(demosdir)|;\
 	    s|[@]streamdir[@]|$(streamdir)|; \
@@ -84,6 +107,7 @@ CLEANFILES += conf/janus.jcfg.sample
 
 ##
 # Janus
+# xiaoxu.shi add  recordex.h and recordex.c
 ##
 
 janus_SOURCES = \
@@ -111,6 +135,8 @@ janus_SOURCES = \
 	mutex.h \
 	record.c \
 	record.h \
+	recordex.c \
+	recordex.h \
 	refcount.h \
 	rtcp.c \
 	rtcp.h \
@@ -150,6 +176,7 @@ janus_CFLAGS = \
 	-DTRANSPORTDIR=\"$(transportdir)\" \
 	-DEVENTDIR=\"$(eventdir)\" \
 	-DLOGGERDIR=\"$(loggerdir)\" \
+	-DRECORDEXDIR=\"$(recordexdir)\"\
 	-DCONFDIR=\"$(confdir)\" \
 	$(BORINGSSL_CFLAGS) \
 	$(NULL)
@@ -400,6 +427,34 @@ loggers_libjanus_jsonlog_la_LIBADD = $(loggers_libadd)
 conf_DATA += conf/janus.logger.jsonlog.jcfg.sample
 EXTRA_DIST += conf/janus.logger.jsonlog.jcfg.sample
 endif
+
+
+##
+# xiaoxu.shi recordex add
+##
+
+recordexs_cflags = \
+	$(AM_CFLAGS) \
+	$(RECORDEXS_CFLAGS) \
+	$(NULL)
+
+recordexs_libadd = \
+	$(RECORDEX_LIBS) \
+	$(NULL)
+
+if ENABLE_RECORDEX_OPUS
+recordex_LTLIBRARIES += recordexs/libjanus_recordex_opus.la
+recordexs_libjanus_recordex_opus_la_SOURCES = recordexs/janus_recordex_opus.c
+recordexs_libjanus_recordex_opus_la_CFLAGS = $(recordexs_cflags)
+recordexs_libjanus_recordex_opus_la_LDFLAGS = $(recordexs_ldflags)
+recordexs_libjanus_recordex_opus_la_LIBADD = $(recordexs_libadd)
+conf_DATA += conf/janus.recordex.opus.jcfg.sample
+EXTRA_DIST += conf/janus.recordex.opus.jcfg.sample
+endif
+
+##
+# xiaoxu.shi recordex end
+##
 
 ##
 # Plugins

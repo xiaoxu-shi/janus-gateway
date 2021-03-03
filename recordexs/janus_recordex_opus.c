@@ -1,3 +1,4 @@
+#if 1
 #include "recordexhander.h"
 
 #define JANUS_RECORDEX_OPUS_VERSION			1
@@ -7,7 +8,7 @@
 #define JANUS_RECORDEX_OPUS_AUTHOR 			"xiaoxu.shi <xaoxu_shi@yeah.net>"
 #define JANUS_RECORDEX_OPUS_PACKAGE			"janus.recordex.opus"
 
-janus_recordex_hander* create_r(void);
+janus_recordex_hander* create(void);
 int  janus_recordex_opus_init(const char *config_path);
 void janus_recordex_opus_destroy(void);
 int  janus_recordex_opus_get_api_compatibility(void);
@@ -19,7 +20,7 @@ const char *janus_recordex_opus_get_author(void);
 const char *janus_recordex_opus_get_package(void);
 
 janus_recordex_recorder* janus_recordex_opus_create(const char *dir, const char *filename);
-void janus_recordex_opus_delete(janus_recordex_recorder* recorder);
+void janus_recordex_opus_destory(janus_recordex_recorder* recorder);
 int  janus_recordex_opus_open(janus_recordex_recorder* recorder);
 void janus_recordex_opus_close(janus_recordex_recorder* recorder);
 int  janus_recordex_opus_process(janus_recordex_recorder* recorder, char *buffer, uint length);
@@ -36,13 +37,13 @@ janus_recordex_hander janus_recordex_opus_hander =
         .get_author = janus_recordex_opus_get_author,
         .get_package = janus_recordex_opus_get_package,
         .create = janus_recordex_opus_create,
-        .delete = janus_recordex_opus_delete,
+        .destory = janus_recordex_opus_destory,
         .open = janus_recordex_opus_open,
         .close = janus_recordex_opus_close,
         .process = janus_recordex_opus_process,
     );
 
-janus_recordex_hander* create_r(void) {
+janus_recordex_hander* create(void) {
     JANUS_LOG(LOG_VERB, "%s created!\n", JANUS_RECORDEX_OPUS_NAME);
     return &janus_recordex_opus_hander;
 }
@@ -89,7 +90,7 @@ janus_recordex_recorder* janus_recordex_opus_create(const char *dir, const char 
     return NULL;
 }
 
-void janus_recordex_opus_delete(janus_recordex_recorder* recorder) {
+void janus_recordex_opus_destory(janus_recordex_recorder* recorder) {
 
 }
 
@@ -105,3 +106,4 @@ int janus_recordex_opus_process(janus_recordex_recorder* recorder, char *buffer,
     return 0;
 }
 
+#endif

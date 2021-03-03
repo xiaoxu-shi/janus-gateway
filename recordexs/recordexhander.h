@@ -21,7 +21,7 @@
 		.get_author = NULL,						\
 		.get_package = NULL,					\
 		.create = NULL, 						\
-		.delete = NULL,							\
+		.destory = NULL,							\
 		.open = NULL, 							\
 		.close = NULL, 							\
 		.process = NULL, 						\
@@ -42,7 +42,7 @@ struct janus_recordex_hander {
 	const char *(* const get_package)(void);
 
 	janus_recordex_recorder* (* const create)(const char *dir, const char *filename);
-	void (* const delete)(janus_recordex_recorder* recorder);
+	void (* const destory)(janus_recordex_recorder* recorder);
 	int  (* const open)(janus_recordex_recorder* recorder);
 	void (* const close)(janus_recordex_recorder* recorder);
 	int  (* const process)(janus_recordex_recorder* recorder, char *buffer, uint length);

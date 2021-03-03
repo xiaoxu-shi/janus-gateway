@@ -151,6 +151,24 @@ AC_ARG_ENABLE([turn-rest-api],
               [],
               [enable_turn_rest_api=maybe])
 
+
+##
+# Recordexs xiaoxu.shi end
+##
+
+AC_ARG_ENABLE([all-recordexs],
+              [AS_HELP_STRING([--disable-all-recordexs],
+                              [Disable building all recordexs (except those manually enabled)])],
+              [
+               AS_IF([test "x$enable_recordex_opus" != "xyes"],
+                     [enable_recordex_opus=no])
+              ],
+              [])
+
+##
+# Recordexs xiaoxu.shi end
+##
+
 AC_ARG_ENABLE([all-plugins],
               [AS_HELP_STRING([--disable-all-plugins],
                               [Disable building all plugins (except those manually enabled)])],
@@ -674,6 +692,33 @@ AS_IF([test "x$enable_systemd_sockets" = "xyes"],
 
 
 ##
+# Recordexs xiaoxu.shi add
+##
+PKG_CHECK_MODULES([RECORDEXS],
+                  [
+                    glib-2.0 >= $glib_version
+                    jansson >= $jansson_version
+                  ])
+
+AC_ARG_ENABLE([recordex_opus],
+              [AS_HELP_STRING([--disable-recordex_opus],
+                              [Disable opus recordex])],
+              [AS_IF([test "x$enable_recordex_opus" != "xyes"],
+                     [enable_recordex_opus=no])],
+              [enable_recordex_opus=maybe])
+### check depends
+### no check depends , Enable
+AS_IF([test "x$enable_recordex_opus" != "maybe"],
+      [enable_recordex_opus=yes])
+
+
+AM_CONDITIONAL([ENABLE_RECORDEX_OPUS], [test "x$enable_recordex_opus" = "xyes"])
+
+##
+# Recordexs xiaoxu.shi end
+##
+
+##
 # Plugins
 ##
 
@@ -1095,6 +1140,16 @@ AM_COND_IF([ENABLE_JAVASCRIPT_MODULES], [
 	],
 	[echo "JavaScript modules:        no"])
 
+##
+# Recordexs xiaoxu.shi end
+##
+echo "Recordex handlers:"
+AM_COND_IF([ENABLE_RECORDEX_OPUS],
+	[echo "    OPUS Recordex handler:    yes"],
+	[echo "    OPUS Recordex handler:    no"])
+##
+# Recordexs xiaoxu.shi end
+##
 echo
 echo "If this configuration is ok for you, do a 'make' to start building Janus. A 'make install' will install Janus and its plugins to the specified prefix. Finally, a 'make configs' will install some sample configuration files too (something you'll only want to do the first time, though)."
 echo

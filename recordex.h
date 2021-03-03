@@ -8,7 +8,7 @@
 #include "mutex.h"
 #include "refcount.h"
 
-#include "recordex/recordexhander.h"
+#include "recordexs/recordexhander.h"
 
 void janus_recordex_recorder_init(GHashTable *handlers);
 void janus_recordex_recorder_deinit(void);
