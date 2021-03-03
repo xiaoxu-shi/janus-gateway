@@ -2,9 +2,10 @@
 
 static GHashTable *recordex_handlers = NULL;
 
-void janus_recordex_recorder_init(GHashTable *handlers)
+int janus_recordex_recorder_init(GHashTable *handlers)
 {
     recordex_handlers = handlers;
+    return 0;
 }
 
 void janus_recordex_recorder_deinit(void)

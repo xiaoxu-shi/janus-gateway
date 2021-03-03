@@ -5170,7 +5170,7 @@ gint main(int argc, char *argv[])
 		g_strfreev(disabled_recordexs);
 	disabled_recordexs = NULL;
 
-	if(janus_recordex_recorder_init(recordexs) {
+	if(janus_recordex_recorder_init(recordexs)) {
 		JANUS_LOG(LOG_FATAL, "Error initializing the Recordex handlers mechanism...\n");
 		exit(1);
 	}

@@ -10,7 +10,7 @@
 
 #include "recordexs/recordexhander.h"
 
-void janus_recordex_recorder_init(GHashTable *handlers);
+int janus_recordex_recorder_init(GHashTable *handlers);
 void janus_recordex_recorder_deinit(void);
 
 janus_recordex_recorder* janus_recordex_recorder_create(
