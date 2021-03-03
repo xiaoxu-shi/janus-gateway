@@ -5169,6 +5169,11 @@ gint main(int argc, char *argv[])
 	if(disabled_recordexs != NULL)
 		g_strfreev(disabled_recordexs);
 	disabled_recordexs = NULL;
+
+	if(janus_recordex_recorder_init(recordexs) {
+		JANUS_LOG(LOG_FATAL, "Error initializing the Recordex handlers mechanism...\n");
+		exit(1);
+	}
 	/* xiaoxu.shi load recoredx handlers end */
 
 	/* Load event handlers */
@@ -5646,6 +5651,7 @@ gint main(int argc, char *argv[])
 
 	/* xiaoxu.shi add begin */
 	JANUS_LOG(LOG_INFO, "Closing recordexs:\n");
+	janus_recordex_recorder_deinit();
 	if(recordexs != NULL && g_hash_table_size(recordexs) > 0) {
 		g_hash_table_foreach(recordexs, janus_recordex_close, NULL);
 		g_hash_table_destroy(recordexs);
