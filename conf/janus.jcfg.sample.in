@@ -9,6 +9,7 @@ general: {
 	transports_folder = "@transportdir@"	# Transports folder
 	events_folder = "@eventdir@"			# Event handlers folder
 	loggers_folder = "@loggerdir@"			# External loggers folder
+	recordexs_folder = "@recordexdir@"	    # Recordex handers folder xiaoxu.shi add
 
 		# The next settings configure logging
 	#log_to_stdout = false					# Whether the Janus output should be written
@@ -384,6 +385,12 @@ transports: {
 loggers: {
 	#disable = "libjanus_jsonlog.so"
 }
+
+# xiaoxu.shi add begin
+recordexs: {
+	#disable = "libjanus_recordex_opus.so,libjanus_recordex_wav, libjanus_recordex_mp4"
+}
+# xiaoxu.shi add end
 
 # Event handlers allow you to receive live events from Janus happening
 # in core and/or plugins. Since this can require some more resources,

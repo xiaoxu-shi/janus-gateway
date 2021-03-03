@@ -1,0 +1,4 @@
+# xiaoxu.shi add
+general: {
+	enabled = false		# By default the module is not enabled
+}

@@ -40,7 +40,9 @@
 #include "auth.h"
 #include "record.h"
 #include "events.h"
-
+// xiaoxu.shi add
+#include "recordex.h"
+// xiaoxu.shi add end
 
 #define JANUS_NAME				"Janus WebRTC Server"
 #define JANUS_AUTHOR			"Meetecho s.r.l."
@@ -69,6 +71,10 @@ static GHashTable *loggers_so = NULL;
 static GHashTable *plugins = NULL;
 static GHashTable *plugins_so = NULL;
 
+/* xiaoxu.shi add begin */
+static GHashTable *recordexs = NULL;
+static GHashTable *recordexs_so = NULL;
+/* xiaoxu.shi add end */
 
 /* Daemonization */
 static gboolean daemonize = FALSE;
@@ -4051,6 +4057,9 @@ gint main(int argc, char *argv[])
 	janus_config_category *config_plugins = janus_config_get_create(config, NULL, janus_config_type_category, "plugins");
 	janus_config_category *config_events = janus_config_get_create(config, NULL, janus_config_type_category, "events");
 	janus_config_category *config_loggers = janus_config_get_create(config, NULL, janus_config_type_category, "loggers");
+	/* xiaoxu.shi add begin */
+	janus_config_category *config_recordexs = janus_config_get_create(config, NULL, janus_config_type_category, "recordexs");
+	/* xiaoxu.shi add end*/
 
 	/* Any log prefix? */
 	janus_config_array *lp = janus_config_get(config, config_general, janus_config_type_item, "log_prefix");
@@ -5023,9 +5032,128 @@ gint main(int argc, char *argv[])
 	/* Wait 120 seconds before stopping idle threads to avoid the creation of too many threads for AddressSanitizer. */
 	g_thread_pool_set_max_idle_time(120 * 1000);
 
-	/* Load event handlers */
-	path = NULL;
+    path = NULL;
 	dir = NULL;
+	/* xiaoxu.shi load recordex handlers begin */
+	path = RECORDEXDIR;
+	item = janus_config_get(config, config_recordexs, janus_config_type_item, "recordexs_folder");
+	if (item && item->value)
+		path = item->value;
+	JANUS_LOG(LOG_INFO, "Recordex plugins folder: %s\n", path);
+	dir = opendir(path);
+	if(!dir) {
+		JANUS_LOG(LOG_FATAL, "\tCouldn't access recordexs handler plugins folder...\n");
+		exit(1);
+	}
+	/* Any plugin to ignore? */
+	gchar **disabled_recordexs = NULL;
+	item = janus_config_get(config, config_recordexs, janus_config_type_item, "disable");
+	if(item && item->value)
+		disabled_recordexs = g_strsplit(item->value, ",", -1);
+	/* Open the shared objects */
+	struct dirent *recordexent = NULL;
+	char recordexpath[1024];
+	while((recordexent = readdir(dir))) {
+		int len = strlen(recordexent->d_name);
+		if (len < 4) {
+			continue;
+		}
+		if (strcasecmp(recordexent->d_name+len-strlen(SHLIB_EXT), SHLIB_EXT)) {
+			continue;
+		}
+		/* Check if this plugins has been disabled in the configuration file */
+		if(disabled_recordexs != NULL) {
+			gchar *index = disabled_recordexs[0];
+			if(index != NULL) {
+				int i=0;
+				gboolean skip = FALSE;
+				while(index != NULL) {
+					while(isspace(*index))
+						index++;
+					if(strlen(index) && !strcmp(index, recordexent->d_name)) {
+						JANUS_LOG(LOG_WARN, "Recordex '%s' has been disabled, skipping...\n", recordexent->d_name);
+						skip = TRUE;
+						break;
+					}
+					i++;
+					index = disabled_recordexs[i];
+				}
+				if(skip)
+					continue;
+			}
+		}
+		JANUS_LOG(LOG_INFO, "Loading recordex '%s'...\n", recordexent->d_name);
+		memset(recordexpath, 0, 1024);
+		g_snprintf(recordexpath, 1024, "%s/%s", path, recordexent->d_name);
+		void *recordex = dlopen(recordexpath, RTLD_NOW | RTLD_GLOBAL);
+		if (!recordex) {
+			JANUS_LOG(LOG_ERR, "\tCouldn't load recordex handler plugin '%s': %s\n", recordexent->d_name, dlerror());
+		} else {
+			create_r *create = (create_r*) dlsym(recordex, "create");
+			const char *dlsym_error = dlerror();
+			if (dlsym_error) {
+				JANUS_LOG(LOG_ERR, "\tCouldn't load symbol 'create': %s\n", dlsym_error);
+				continue;
+			}
+			janus_recordex_hander *janus_recordex = create(); //TODO
+			if(!janus_recordex) {
+				JANUS_LOG(LOG_ERR, "\tCouldn't use function 'create'...\n");
+				continue;
+			}
+			/* Are all the mandatory methods and callbacks implemented? */
+			if(!janus_recordex->init || !janus_recordex->destroy ||
+					!janus_recordex->get_api_compatibility ||
+					!janus_recordex->get_version ||
+					!janus_recordex->get_version_string ||
+					!janus_recordex->get_description ||
+					!janus_recordex->get_package ||
+					!janus_recordex->get_name ||
+					!janus_recordex->get_author ||
+					!janus_recordex->rex_create ||
+					!janus_recordex->rex_destory ||
+					!janus_recordex->rex_open ||
+					!janus_recordex->rex_close ||
+					!janus_recordex->rex_process) {
+				JANUS_LOG(LOG_ERR, "\tMissing some mandatory methods/callbacks, skipping this plugin...\n");
+				continue;
+			}
+			if(janus_recordex->get_api_compatibility() < JANUS_RECORDEXHANDER_API_VERSION) {
+				JANUS_LOG(LOG_ERR, "The '%s' plugin was compiled against an older version of the API (%d < %d), skipping it: update it to enable it again\n",
+					janus_recordex->get_package(), janus_recordex->get_api_compatibility(), JANUS_RECORDEXHANDER_API_VERSION);
+				continue;
+			}
+			if(janus_recordex->init(configs_folder) < 0) {
+				JANUS_LOG(LOG_WARN, "The '%s' plugin could not be initialized\n", janus_recordex->get_package());
+				dlclose(recordex);
+				continue;
+			}
+			JANUS_LOG(LOG_VERB, "\tVersion: %d (%s)\n", janus_recordex->get_version(), janus_recordex->get_version_string());
+			JANUS_LOG(LOG_VERB, "\t   [%s] %s\n", janus_recordex->get_package(), janus_recordex->get_name());
+			JANUS_LOG(LOG_VERB, "\t   %s\n", janus_recordex->get_description());
+			JANUS_LOG(LOG_VERB, "\t   Plugin API version: %d\n", janus_recordex->get_api_compatibility());
+			if(!janus_recordex->rex_create && !janus_recordex->rex_destory && !janus_recordex->rex_open && !janus_recordex->rex_close && !janus_recordex->rex_process) {
+				JANUS_LOG(LOG_WARN, "The '%s' plugin doesn't implement any callback for rex_create/rex_destroy/rex_open/rex_close/rex_process... is this on purpose?\n",
+					janus_recordex->get_package());
+			}
+			if(!janus_recordex->rex_create && !janus_recordex->rex_destory && !janus_recordex->rex_open && !janus_recordex->rex_close && !janus_recordex->rex_process) {
+				JANUS_LOG(LOG_WARN, "The '%s' plugin will only handle data channels (rex_create/rex_destroy/rex_open/rex_close/rex_process)... is this on purpose?\n",
+					janus_recordex->get_package());
+			}
+			if(recordexs == NULL)
+				recordexs = g_hash_table_new(g_str_hash, g_str_equal);
+			g_hash_table_insert(recordexs, (gpointer)janus_recordex->get_package(), janus_recordex);
+			if(recordexs_so == NULL)
+				recordexs_so = g_hash_table_new(g_str_hash, g_str_equal);
+			g_hash_table_insert(recordexs_so, (gpointer)janus_recordex->get_package(), recordex);
+		}
+	}
+	closedir(dir);
+	if(disabled_recordexs != NULL)
+		g_strfreev(disabled_recordexs);
+	disabled_recordexs = NULL;
+	/* xiaoxu.shi load recoredx handlers end */
+
+	/* Load event handlers */
 	/* Event handlers are disabled by default, though: they need to be enabled in the configuration */
 	item = janus_config_get(config, config_events, janus_config_type_item, "broadcast");
 	gboolean enable_events = FALSE;

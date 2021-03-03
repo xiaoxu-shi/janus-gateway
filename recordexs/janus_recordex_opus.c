@@ -35,11 +35,11 @@ janus_recordex_hander janus_recordex_opus_hander =
         .get_name = janus_recordex_opus_get_name,
         .get_author = janus_recordex_opus_get_author,
         .get_package = janus_recordex_opus_get_package,
-        .create = janus_recordex_opus_create,
-        .destory = janus_recordex_opus_destory,
-        .open = janus_recordex_opus_open,
-        .close = janus_recordex_opus_close,
-        .process = janus_recordex_opus_process,
+        .rex_create = janus_recordex_opus_create,
+        .rex_destory = janus_recordex_opus_destory,
+        .rex_open = janus_recordex_opus_open,
+        .rex_close = janus_recordex_opus_close,
+        .rex_process = janus_recordex_opus_process,
     );
 
 janus_recordex_hander* create(void) {
