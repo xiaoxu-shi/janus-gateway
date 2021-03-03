@@ -3,7 +3,7 @@
 #define JANUS_RECORDEX_OPUS_VERSION			1
 #define JANUS_RECORDEX_OPUS_VERSION_STRING 	"0.0.1"
 #define JANUS_RECORDEX_OPUS_DESCRIPTION 	"This is recorder handler plugin for Janus, which recording opus file."
-#define JANUS_RECORDEX_OPUS_NAME 		    "JANUS Recordex plugin"
+#define JANUS_RECORDEX_OPUS_NAME 		    "Janus recordex opus plugin"
 #define JANUS_RECORDEX_OPUS_AUTHOR 			"xiaoxu.shi <xaoxu_shi@yeah.net>"
 #define JANUS_RECORDEX_OPUS_PACKAGE			"janus.recordex.opus"
 
@@ -18,11 +18,11 @@ const char *janus_recordex_opus_get_name(void);
 const char *janus_recordex_opus_get_author(void);
 const char *janus_recordex_opus_get_package(void);
 
-janus_recordex_recorder* janus_recordex_opus_create(const char *dir, const char *filename);
-void janus_recordex_opus_destory(janus_recordex_recorder* recorder);
-int  janus_recordex_opus_open(janus_recordex_recorder* recorder);
-void janus_recordex_opus_close(janus_recordex_recorder* recorder);
-int  janus_recordex_opus_process(janus_recordex_recorder* recorder, char *buffer, uint length);
+janus_recordex_recorder* janus_recordex_opus_rex_create(const char *dir, const char *filename);
+void janus_recordex_opus_rex_destory(janus_recordex_recorder* recorder);
+int  janus_recordex_opus_rex_open(janus_recordex_recorder* recorder);
+void janus_recordex_opus_rex_close(janus_recordex_recorder* recorder);
+int  janus_recordex_opus_rex_process(janus_recordex_recorder* recorder, char *buffer, uint length);
 
 janus_recordex_hander janus_recordex_opus_hander =
     JANUS_RECORDEX_HANDER_INIT(
@@ -35,11 +35,11 @@ janus_recordex_hander janus_recordex_opus_hander =
         .get_name = janus_recordex_opus_get_name,
         .get_author = janus_recordex_opus_get_author,
         .get_package = janus_recordex_opus_get_package,
-        .rex_create = janus_recordex_opus_create,
-        .rex_destory = janus_recordex_opus_destory,
-        .rex_open = janus_recordex_opus_open,
-        .rex_close = janus_recordex_opus_close,
-        .rex_process = janus_recordex_opus_process,
+        .rex_create = janus_recordex_opus_rex_create,
+        .rex_destory = janus_recordex_opus_rex_destory,
+        .rex_open = janus_recordex_opus_rex_open,
+        .rex_close = janus_recordex_opus_rex_close,
+        .rex_process = janus_recordex_opus_rex_process,
     );
 
 janus_recordex_hander* create(void) {
@@ -85,23 +85,23 @@ const char *janus_recordex_opus_get_package(void) {
     return JANUS_RECORDEX_OPUS_PACKAGE;
 }
 
-janus_recordex_recorder* janus_recordex_opus_create(const char *dir, const char *filename) {
+janus_recordex_recorder* janus_recordex_opus_rex_create(const char *dir, const char *filename) {
     return NULL;
 }
 
-void janus_recordex_opus_destory(janus_recordex_recorder* recorder) {
+void janus_recordex_opus_rex_destory(janus_recordex_recorder* recorder) {
 
 }
 
-int janus_recordex_opus_open(janus_recordex_recorder* recorder) {
+int janus_recordex_opus_rex_open(janus_recordex_recorder* recorder) {
     return 0;
 }
 
-void janus_recordex_opus_close(janus_recordex_recorder* recorder) {
+void janus_recordex_opus_rex_close(janus_recordex_recorder* recorder) {
 
 }
 
-int janus_recordex_opus_process(janus_recordex_recorder* recorder, char *buffer, uint length) {
+int janus_recordex_opus_rex_process(janus_recordex_recorder* recorder, char *buffer, uint length) {
     return 0;
 }
 
