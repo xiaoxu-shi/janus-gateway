@@ -6,6 +6,7 @@
 #define JANUS_RECORDEX_OPUS_NAME 		    "Janus recordex opus plugin"
 #define JANUS_RECORDEX_OPUS_AUTHOR 			"xiaoxu.shi <xaoxu_shi@yeah.net>"
 #define JANUS_RECORDEX_OPUS_PACKAGE			"janus.recordex.opus"
+#define JANUS_RECORDEX_OPUS_FORMAT			"opus"
 
 janus_recordex_hander* create(void);
 int  janus_recordex_opus_init(const char *config_path);
@@ -17,6 +18,7 @@ const char *janus_recordex_opus_get_description(void);
 const char *janus_recordex_opus_get_name(void);
 const char *janus_recordex_opus_get_author(void);
 const char *janus_recordex_opus_get_package(void);
+const char *janus_recordex_opus_get_format(void);
 
 janus_recordex_recorder* janus_recordex_opus_rex_create(const char *dir, const char *filename);
 void janus_recordex_opus_rex_destory(janus_recordex_recorder* recorder);
@@ -32,6 +34,7 @@ janus_recordex_hander janus_recordex_opus_hander =
         .get_version = janus_recordex_opus_get_version,
         .get_version_string = janus_recordex_opus_get_version_string,
         .get_description = janus_recordex_opus_get_description,
+        .get_format = janus_recordex_opus_get_format,
         .get_name = janus_recordex_opus_get_name,
         .get_author = janus_recordex_opus_get_author,
         .get_package = janus_recordex_opus_get_package,
@@ -83,6 +86,10 @@ const char *janus_recordex_opus_get_author(void) {
 
 const char *janus_recordex_opus_get_package(void) {
     return JANUS_RECORDEX_OPUS_PACKAGE;
+}
+
+const char *janus_recordex_opus_get_format(void) {
+    return JANUS_RECORDEX_OPUS_FORMAT;
 }
 
 janus_recordex_recorder* janus_recordex_opus_rex_create(const char *dir, const char *filename) {

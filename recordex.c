@@ -16,6 +16,7 @@ void janus_recordex_recorder_deinit(void)
 janus_recordex_recorder* janus_recordex_recorder_create(
     const char *dir,
     const char *codec,
+    const char *format,
     const char *filename)
 {
     return 0;

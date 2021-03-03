@@ -5127,6 +5127,7 @@ gint main(int argc, char *argv[])
 					!janus_recordex->get_package ||
 					!janus_recordex->get_name ||
 					!janus_recordex->get_author ||
+					!janus_recordex->get_format ||
 					!janus_recordex->rex_create ||
 					!janus_recordex->rex_destory ||
 					!janus_recordex->rex_open ||
@@ -5149,6 +5150,7 @@ gint main(int argc, char *argv[])
 			JANUS_LOG(LOG_VERB, "\t   [%s] %s\n", janus_recordex->get_package(), janus_recordex->get_name());
 			JANUS_LOG(LOG_VERB, "\t   %s\n", janus_recordex->get_description());
 			JANUS_LOG(LOG_VERB, "\t   Plugin API version: %d\n", janus_recordex->get_api_compatibility());
+			JANUS_LOG(LOG_VERB, "\t   Format: %s\n", janus_recordex->get_format());
 			if(!janus_recordex->rex_create && !janus_recordex->rex_destory && !janus_recordex->rex_open && !janus_recordex->rex_close && !janus_recordex->rex_process) {
 				JANUS_LOG(LOG_WARN, "The '%s' plugin doesn't implement any callback for rex_create/rex_destroy/rex_open/rex_close/rex_process... is this on purpose?\n",
 					janus_recordex->get_package());
