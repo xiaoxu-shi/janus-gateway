@@ -1,4 +1,3 @@
-#if 1
 #include "recordexhander.h"
 
 #define JANUS_RECORDEX_OPUS_VERSION			1
@@ -25,7 +24,7 @@ int  janus_recordex_opus_open(janus_recordex_recorder* recorder);
 void janus_recordex_opus_close(janus_recordex_recorder* recorder);
 int  janus_recordex_opus_process(janus_recordex_recorder* recorder, char *buffer, uint length);
 
-janus_recordex_hander janus_recordex_opus_hander = 
+janus_recordex_hander janus_recordex_opus_hander =
     JANUS_RECORDEX_HANDER_INIT(
         .init = janus_recordex_opus_init,
         .destroy = janus_recordex_opus_destroy,
@@ -99,11 +98,10 @@ int janus_recordex_opus_open(janus_recordex_recorder* recorder) {
 }
 
 void janus_recordex_opus_close(janus_recordex_recorder* recorder) {
-    
+
 }
 
 int janus_recordex_opus_process(janus_recordex_recorder* recorder, char *buffer, uint length) {
     return 0;
 }
 
-#endif

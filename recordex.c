@@ -28,7 +28,7 @@ int janus_recordex_recorder_open(janus_recordex_recorder *recorder)
 int janus_recordex_recorder_save_frame(
     janus_recordex_recorder *recorder,
     char *buffer,
-    uint length) 
+    uint length)
 {
     return 0;
 }
