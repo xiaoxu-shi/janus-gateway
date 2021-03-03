@@ -257,6 +257,12 @@ void janus_plugin_close(void *key, void *value, void *user_data);
  * @param[in] value The janus_plugin plugin instance to close
  * @param[in] user_data User provided data (unused) */
 void janus_pluginso_close(void *key, void *value, void *user_data);
+
+/* xiaoxu.shi add begin */
+void janus_recordex_close(gpointer key, gpointer value, gpointer user_data);
+void janus_precordexso_close(gpointer key, gpointer value, gpointer user_data);
+/* xiaoxu.shi add end*/
+
 /*! \brief Method to return a registered plugin instance out of its package name
  * @param[in] package The unique package name of the plugin
  * @returns The plugin instance */

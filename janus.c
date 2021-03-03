@@ -3396,6 +3396,24 @@ void janus_pluginso_close(gpointer key, gpointer value, gpointer user_data) {
 	//~ dlclose(plugin);
 }
 
+/* xiaoxu.shi add begin */
+/* Recordex */
+void janus_recordex_close(gpointer key, gpointer value, gpointer user_data) {
+	janus_recordex_hander *rexhandler = (janus_recordex_hander *)value;
+	if(!rexhandler)
+		return;
+	rexhandler->destroy();
+}
+
+void janus_precordexso_close(gpointer key, gpointer value, gpointer user_data) {
+	void *rexhandlerso = value;
+	if(!rexhandlerso)
+		return;
+	/* FIXME We don't dlclose plugins to be sure we can detect leaks */
+	//~ dlclose(plugin);
+}
+/* xiaoxu.shi add end*/
+
 janus_plugin *janus_plugin_find(const gchar *package) {
 	if(package != NULL && plugins != NULL)	/* FIXME Do we need to fix the key pointer? */
 		return g_hash_table_lookup(plugins, package);
@@ -5625,6 +5643,18 @@ gint main(int argc, char *argv[])
 	janus_sctp_deinit();
 #endif
 	janus_auth_deinit();
+
+	/* xiaoxu.shi add begin */
+	JANUS_LOG(LOG_INFO, "Closing recordexs:\n");
+	if(recordexs != NULL && g_hash_table_size(recordexs) > 0) {
+		g_hash_table_foreach(recordexs, janus_recordex_close, NULL);
+		g_hash_table_destroy(recordexs);
+	}
+	if(recordexs_so != NULL && g_hash_table_size(recordexs_so) > 0) {
+		g_hash_table_foreach(recordexs_so, janus_precordexso_close, NULL);
+		g_hash_table_destroy(recordexs_so);
+	}
+	/* xiaoxu.shi add end*/
 
 	JANUS_LOG(LOG_INFO, "Closing plugins:\n");
 	if(plugins != NULL && g_hash_table_size(plugins) > 0) {
