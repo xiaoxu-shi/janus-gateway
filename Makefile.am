@@ -444,7 +444,10 @@ recordexs_libadd = \
 
 if ENABLE_RECORDEX_OPUS
 recordex_LTLIBRARIES += recordexs/libjanus_recordex_opus.la
-recordexs_libjanus_recordex_opus_la_SOURCES = recordexs/janus_recordex_opus.c
+recordexs_libjanus_recordex_opus_la_SOURCES = \
+	recordexs/recordex_uilts.h \
+	recordexs/recordex_uilts.c \
+	recordexs/janus_recordex_opus.c
 recordexs_libjanus_recordex_opus_la_CFLAGS = $(recordexs_cflags)
 recordexs_libjanus_recordex_opus_la_LDFLAGS = $(recordexs_ldflags)
 recordexs_libjanus_recordex_opus_la_LIBADD = $(recordexs_libadd)

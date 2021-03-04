@@ -10,25 +10,25 @@
 
 #include "recordexs/recordexhander.h"
 
-int janus_recordex_recorder_init(GHashTable *handlers);
+gint janus_recordex_recorder_init(GHashTable *handlers);
 void janus_recordex_recorder_deinit(void);
 
 janus_recordex_recorder* janus_recordex_recorder_create(
-    const char *dir,
-    const char *codec,
-    const char *format,
-    const char *filename
+    const gchar *dir,
+    const gchar *codec,
+    const gchar *format,
+    const gchar *filename
 );
 
-int janus_recordex_recorder_open(janus_recordex_recorder *recorder);
+gint janus_recordex_recorder_open(janus_recordex_recorder *recorder);
 
-int janus_recordex_recorder_save_frame(
+gint janus_recordex_recorder_save_frame(
     janus_recordex_recorder *recorder,
-    char *buffer,
-    uint length
+    gpointer buffer,
+    guint length
 );
 
-int janus_recordex_recorder_close(janus_recordex_recorder *recorder);
+gint janus_recordex_recorder_close(janus_recordex_recorder *recorder);
 
 void janus_recordex_recorder_destroy(janus_recordex_recorder *recorder);
 

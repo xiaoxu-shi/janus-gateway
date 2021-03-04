@@ -32,40 +32,42 @@ typedef struct janus_recordex_hander janus_recordex_hander;
 typedef struct janus_recordex_recorder janus_recordex_recorder;
 
 struct janus_recordex_hander {
-	int  (* const init)(const char *config_path);
+	gint (* const init)(const gchar *config_path);
 	void (* const destroy)(void);
-	int  (* const get_api_compatibility)(void);
-	int  (* const get_version)(void);
-	const char *(* const get_version_string)(void);
-	const char *(* const get_description)(void);
-	const char *(* const get_name)(void);
-	const char *(* const get_author)(void);
-	const char *(* const get_package)(void);
-	const char *(* const get_format)(void);
+	gint (* const get_api_compatibility)(void);
+	gint (* const get_version)(void);
+	const gchar *(* const get_version_string)(void);
+	const gchar *(* const get_description)(void);
+	const gchar *(* const get_name)(void);
+	const gchar *(* const get_author)(void);
+	const gchar *(* const get_package)(void);
+	const gchar *(* const get_format)(void);
 
-	janus_recordex_recorder* (* const rex_create)(const char *dir, const char *filename);
+	janus_recordex_recorder* (* const rex_create)(janus_recordex_hander *handler, const gchar *dir, const gchar *codec, const gchar *format, const gchar *filename);
 	void (* const rex_destory)(janus_recordex_recorder* recorder);
-	int  (* const rex_open)(janus_recordex_recorder* recorder);
+	gint (* const rex_open)(janus_recordex_recorder* recorder);
 	void (* const rex_close)(janus_recordex_recorder* recorder);
-	int  (* const rex_process)(janus_recordex_recorder* recorder, char *buffer, uint length);
+	gint (* const rex_process)(janus_recordex_recorder* recorder, gpointer buffer, guint length);
 };
 
 typedef enum janus_recordex_medium {
 	JANUS_RECORDEX_AUDIO,
 	JANUS_RECORDEX_VIDEO,
-	JANUS_RECORDEX_DATA
+	JANUS_RECORDEX_DATA,
+	JANUS_RECORDEX_UNKNOWN
 } janus_recordex_medium;
 
 struct janus_recordex_recorder {
 	janus_recordex_hander* 	hander;
-	const char*				dir;
-	const char*				filename;
+	gchar*					dir;
+	gchar* 					codec;
+	gchar* 					format;
+	gchar*					filename;
 	janus_recordex_medium	type;
-	volatile int 			writable;
+	volatile gint 			writable;
 	volatile gint 			destroyed;
-	FILE*					file;
-	void*					expand;
-	janus_refcount 			ref;
+	gpointer				expand;
+	janus_mutex 			mutex;
 };
 
 typedef janus_recordex_hander* create_r(void);
